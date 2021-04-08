@@ -1,0 +1,41 @@
+version: '3.3'
+
+services:
+  mysql:
+    image: mariadb
+    volumes:
+      - /root/var/lib/mysql:/var/lib/mysql
+    ports:
+      - 127.0.0.1:3306:3306
+    command: '--default-authentication-plugin=mysql_native_password'
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_ROOT_PASSWORD:  somewordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: redhat
+    container_name: wordpressdb
+    restart: unless-stopped
+    networks:
+      - mariadb-wp-privnet
+
+  wordpress:
+    depends_on:
+      - mysql
+    image: wordpress:5.6.2-apache
+    restart: unless-stopped
+    environment:
+      WORDPRESS_MYSQL_HOST: wordpressdb
+      WORDPRESS_MYSQL_NAME: wordpress
+      WORDPRESS_MYSQL_USER: wordpress
+      WORDPRESS_MYSQL_PASSWORD: redhat
+    container_name: wordpress
+    ports:
+      - 127.0.0.1:80:80
+    volumes:
+      - /root/var/www/html:/var/www/html
+    networks:
+      - mariadb-wp-privnet
+
+networks:
+  mariadb-wp-privnet:
+    driver: bridge
