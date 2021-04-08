@@ -10,7 +10,7 @@ docker image ls
 ls -lR /root/var
 docker network ls
 docker container ls
-docker network inspect mariadb-wp-privnet
+docker network inspect wordpress_mariadb-wp-privnet
 docker container inspect wordpressdb
 docker container inspect wordpress
 firewall-cmd --list-services
